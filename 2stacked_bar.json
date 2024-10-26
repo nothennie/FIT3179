@@ -1,0 +1,144 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "params": [
+      {
+        "name": "Selected_State",
+        "value": "Total",
+        "bind": {
+          "input": "select",
+          "labels": [
+            "Total",
+            "Victoria",
+            "New South Wales",
+            "Queensland",
+            "South Australia",
+            "Western Australia",
+            "Tasmania",
+            "Australian Capital Territory"
+          ],
+          "options": [
+            "Total",
+            "Victoria",
+            "New South Wales",
+            "Queensland",
+            "South Australia",
+            "Western Australia",
+            "Tasmania",
+            "Australian Capital Territory"
+          ],
+          "name": "Select State: "
+        }
+      },
+      {
+        "name": "Selected_Year",
+        "value": 2016,
+        "bind": {
+          "input": "range",
+          "min": 2016,
+          "max": 2023,
+          "step": 1,
+          "name": "Select Year: "
+        }
+      }
+    ],
+    "hconcat": [
+      {
+        "title": "Number of People by Education Level and Sex, Australia (2016-2023)",
+        "width": 300,
+        "height": 400,
+        "data": {
+          "url": "https://raw.githubusercontent.com/nothennie/test/refs/heads/main/data/count(state%2Beducation).csv"
+        },
+        "transform": [
+          {"filter": "datum.State == Selected_State"},
+          {"filter": "datum.Year == Selected_Year"}
+        ],
+        "mark": "bar",
+        "encoding": {
+          "y": {
+            "field": "Education",
+            "type": "nominal",
+            "axis": {
+              "title": "Education Level"
+            },
+            "sort": ["Postgraduate Degree", "Graduate Diploma or Certificate", "Bachelor Degree", "Advanced Diploma or Diploma","Certificate III or IV", "Year 12 or equivalent", "Year 11 or equivalent", "Year 10 or equivalent"]
+          },
+          "x": {
+            "field": "Count",
+            "type": "quantitative",
+            "axis": {
+              "title": "Number of people"
+            }
+          },
+          "color": {
+            "field": "Sex",
+            "type": "nominal",
+            "scale": {
+              "domain": ["Male", "Female"],
+              "range": ["#a4cd8d", "#f2a484"]  
+            },
+            "legend": {
+              "title": "Sex"
+            }
+          },
+          "tooltip": [
+            {"field": "Education", "type": "nominal", "title": "Education Level"},
+            {"field": "Sex", "type": "nominal", "title": "Sex"},
+            {"field": "Count", "type": "quantitative", "title": "Number of people"},
+            {"field": "State", "type": "nominal", "title": "State"},
+            {"field": "Year", "type": "quantitative", "title": "Year"}
+          ]
+        }
+      },
+      {
+        "title": "Number of People by Occupation Skill Level and Sex, Australia (2016-2023)",
+        "width": 300,
+        "height": 400,
+        "data": {
+          "url": "https://raw.githubusercontent.com/nothennie/test/refs/heads/main/data/count(state%2Boccupation).csv"
+        },
+        "transform": [
+          {"filter": "datum.State == Selected_State"},
+          {"filter": "datum.Year == Selected_Year"},
+          {"filter": "datum.Occupation != 'Not employed'"}
+        ],
+        "mark": "bar",
+        "encoding": {
+          "y": {
+            "field": "Occupation",
+            "type": "ordinal",
+            "axis": {
+              "title": "Occupation Skill Level"
+            },
+            "sort": ["Managers", "Professionals", "Technicians and Trades Workers", "Community and Personal Service Workers","Clerical and Administrative Workers", "Sales Workers", "Machinery Operators and Drivers", "Labourers"]
+          },
+          "x": {
+            "field": "Count",
+            "type": "quantitative",
+            "axis": {
+              "title": "Number of people"
+            }
+          },
+          "color": {
+            "field": "Sex",
+            "type": "nominal",
+            "legend": {
+              "title": "Sex"
+            }
+          },
+          "tooltip": [
+            {"field": "Occupation", "type": "nominal", "title": "Occupation Skill Level"},
+            {"field": "Sex", "type": "nominal", "title": "Sex"},
+            {"field": "State", "type": "nominal", "title": "State"},
+            {"field": "Year", "type": "quantitative", "title": "Year"},
+            {"field": "Count", "type": "quantitative", "title": "Number of people"}
+          ]
+        }
+      }
+    ],
+    "resolve": {
+      "scale": {
+        "x": "shared"
+      }
+    }
+  }

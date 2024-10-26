@@ -1,0 +1,124 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Weekly Wage per Capita by Industry and Sex, Asutralia (2014-2023)",
+    "projection": {"type": "mercator"},
+    "height": 500,
+    "width": 700,
+    "data": {
+      "url": "https://raw.githubusercontent.com/nothennie/test/refs/heads/main/data/sum(count(state%2Bindustyr%2Btotal)).csv"
+    },
+    "params": [
+      {
+        "name": "Year_Select",
+        "value": 2014,
+        "bind": {
+          "input": "range",
+          "min": 2014,
+          "max": 2023,
+          "step": 1,
+          "name": "Select Year: "
+        }
+      },
+      {
+        "name": "Sex_Select",
+        "value": "Total",
+        "bind": {
+          "input": "select",
+          "options": ["Total", "Male", "Female"],
+          "name": "Select Sex: "
+        }
+      },
+      {
+        "name": "Industry_Select",
+        "value": "Total",
+        "bind": {
+          "input": "select",
+          "options": ["Total","Agriculture, Forestry and Fishing", "Mining", "Manufacturing", "Electricity, Gas, Water and Waste Services","Construction", "Wholesale Trade","Retail Trade", "Accommodation and Food Services", "Transport, Postal and Warehousing","Information Media and Telecommunications", "Financial and Insurance Services", "Rental, Hiring and Real Estate Services", "Professional, Scientific and Technical Services", "Administrative and Support Services", "Public Administration and Safety", "Education and Training", "Health Care and Social Assistance", "Arts and Recreation Services", "Other Services"],
+          "name": "Select Industry: "
+        }
+      }
+    ],
+    "transform": [
+      {"filter": "datum.Year == Year_Select"},
+       {"filter": "datum.Sex == Sex_Select"},
+      {"filter": "datum.Industry == Industry_Select"},
+  
+      {
+        "calculate": "datum.Weekly_Sum / datum.People",
+        "as": "Wage_per_capita"
+      },
+      {
+        "lookup": "State",
+        "from": {
+          "data": {
+            "url": "https://raw.githubusercontent.com/nothennie/test/refs/heads/main/data/STE_2016_AUST.json",
+            "format": {"type": "topojson", "feature": "STE_2016_AUST"}
+          },
+          "key": "properties.STE_NAME16"
+        },
+        "as": "geometry"
+      }
+    ],
+    "layer": [
+      {
+        "mark": {"type": "geoshape", "stroke": "#fff", "strokeWidth": 0.5},
+        "encoding": {
+          "shape": {"field": "geometry", "type": "geojson"},
+          "color": {
+            "field": "Wage_per_capita",
+            "type": "quantitative",
+            "scale": {"scheme": "bluepurple"},
+            "legend": {"title": "Weekly Wage per Capita"}
+          },
+          "tooltip": [
+            {"field": "State", "type": "nominal", "title": "State"},
+            {"field": "Sex", "type": "nominal", "title": "Sex"},
+            {"field": "Wage_per_capita", "type": "quantitative", "title": "Weekly Wage per Capita"},
+            {"field": "People", "type": "quantitative", "title": "Population"},
+            {"field": "Year", "type": "ordinal", "title": "Year"}
+          ]
+        }
+      },
+      {
+        "transform": [
+          {
+            "lookup": "State",
+            "from": {
+              "data": {
+                "url": "https://raw.githubusercontent.com/nothennie/test/refs/heads/main/data/aus_state_coordy.csv"
+              },
+              "key": "name",
+              "fields": ["latitude", "longitude"]
+            }
+          },
+          {
+            "filter": {
+              "or": [
+                {"field": "State", "equal": "Victoria"},
+                {"field": "State", "equal": "South Australia"},
+                {"field": "State", "equal": "Western Australia"},
+                {"field": "State", "equal": "Queensland"},
+                {"field": "State", "equal": "Australian Capital Territory"},
+                {"field": "State", "equal": "New South Wales"},
+                {"field": "State", "equal": "Northern Territory"},
+                {"field": "State", "equal": "Tasmania"}
+              ]
+            }
+          }
+        ],
+        "mark": {"type": "text", "align": "left", "baseline":"top","fontSize": 14, "dx": -23, "fontStyle": "italic"},
+        "encoding": {
+          "latitude": {"field": "latitude", "type": "quantitative"},
+          "longitude": {"field": "longitude", "type": "quantitative"},
+          "text": {"field": "State", "type": "nominal"},
+          "opacity": {
+            "condition": {
+              "test": "datum['State'] == 'Northern Territory' || datum['State'] == 'New South Wales' || datum['State'] == 'Tasmania'|| datum['State'] == 'South Australia' || datum['State'] == 'Western Australia' || datum['State'] == 'Queensland' || datum['State'] == 'Australian Capital Territory' || datum['State'] == 'Victoria'",
+              "value": 1
+            },
+            "value": 0.8
+          }
+        }
+      }
+    ]
+  }

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Font -->>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <title>Earnings and Income in Australia - Gender Pay Gap Dashboard</title>
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4f81bd;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        section p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .annotation {
+            font-style: italic;
+            color: #666;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        .filters {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .limitation {
+            color: #cc0000;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        #vis1, #vis2, #vis3, #vis4, #vis5 {
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background-color: #4f81bd;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+    <header>
+        <h1>Earnings and Income in Australia: A Focus on the Gender Pay Gap</h1>
+        <p>This interactive dashboard provides insights into the earnings and income in Australia from 2014 to 2023, with a particular emphasis on the gender pay gap across different industries, regions, and occupations. The data reveals trends that help us understand how gender influences income, offering a comprehensive view of economic inequality.</p>
+    </header>
+    
+    <main>
+        <section id="map-section">
+            <h2>Weekly Wage per Capita by Industry and Gender (2014-2023)</h2>
+            <p>This map brings to light the regional differences in weekly wages per person across Australia, broken down by gender and industry. It helps us see how where you live and the industry you work in can affect wage differences between men and women. For example, some regions might show bigger pay gaps, possibly due to dominant local industries or cultural factors.</p>
+            <p>In an attempt to make the data fair, I calculated the total weekly wages and divided them by the population in each region. For each industry, I also considered the total weekly wages for men and women to ensure the comparisons accurately reflect average earnings across genders.</p>
+            <p><strong>Analysis:</strong> The visualisation shows notable differences in wage levels across regions, especially in places rich in resources like Western Australia. Dominant industries such as mining and construction stand out as they often pay higher wages and have mostly male workers, contributing to the gender pay gap. Policymakers might find this information helpful to consider region-specific actions to tackle wage inequality.</p>
+            <div id="vis1"></div>
+            <p class="annotation">Annotation: Hovering over the chart will provide tooltip that will provide additional information.</p>
+            <p class="filters">Filters: Year, Gender, Industry</p>
+            <p class="limitation">Limitation: This map doesn't account for part-time versus full-time work.</p>
+        </section>
+    
+        <section id="earnings-section">
+            <h2>Median Weekly Earnings and the Gender Pay Gap</h2>
+            <p>This chart displays the median weekly earnings for men and women in Australia over the years, highlighting the ongoing gender pay gap. Even though there have been some improvements, the gap is still noticeable, with men consistently earning more than women. The cumulative earnings chart on the right shows the long-term effect of this difference: even small weekly pay gaps can add up to significant differences over a career spanning 40+ years. This visualises how systemic inequality builds up over time, affecting women's financial security, retirement savings, and overall quality of life.</p>
+            <p>In the cumulative earnings graph, I included a 3% annual wage increase after the first year to reflect standard wage growth. This demonstrates how early pay differences can lead to much larger disparities as time goes on.</p>
+            <p><strong>Analysis:</strong> The gender pay gap in median weekly earnings continues throughout the years, with men consistently earning more than women. The cumulative impact over a career highlights the long-term consequences of pay inequality. This shows how early inequalities can grow into significant financial disadvantages, affecting women's retirement savings, investments, and economic security.</p>
+            <div id="vis2"></div>
+            <p class="annotation">Annotation: Hovering over the chart will provide tooltip that will provide additional information. Additionally there is an interative feature that intersects the two lines in the chart</p>
+            <p class="filters">Filters: Year, Gender</p>
+            <p class="limitation">Limitation: The cumulative earnings graph assumes a constant 3% wage increase each year, which may not accurately reflect real-world economic conditions like inflation, wage stagnation, or economic downturns.</p>
+        </section>
+    
+        <section id="industry-section">
+            <h2>Median Weekly Earnings by Industry and Gender (2014-2023)</h2>
+            <p>See how different industries play a role in the gender pay gap. This chart shows the median weekly earnings for men and women across various industries, revealing significant differences in pay between sectors. For instance, traditionally male-dominated industries like mining and construction often have higher median earnings, while sectors with more women, like healthcare and social assistance, tend to have lower median earnings. This visual highlights structural issues within industries that contribute to unequal pay.</p>
+            <p><strong>Analysis:</strong> The chart demonstrates how the industry you work in greatly affects income differences. Male-dominated industries like mining offer higher wages, while female-dominated sectors like healthcare are paid less. This suggests systemic issues in how different types of work are valued. This analysis can support calls for pay equity adjustments within specific industries and shed light on how industry choice contributes to the wider gender pay gap.</p>
+            <div id="vis3"></div>
+            <p class="annotation">Annotation: Hovering over the chart will provide tooltip that will provide additional information.</p>
+            <p class="filters">Filters: Year, Gender, Industry, State</p>
+            <p class="limitation">Limitation: Industry classifications might change over time, and the data doesn't account for factors like unionisation, industry-specific regulations, or differences in job roles within industries that could affect pay variations.</p>
+        </section>
+    
+        <section id="education-occupation-section">
+            <h2>People by Education Level and Occupation Skill Level by Gender (2016-2023)</h2>
+            <p>These charts examine how education and job levels affect gender disparities in Australia. The first chart shows the number of people by education level, divided by gender, revealing that although more women are earning higher education degrees, this doesn't always lead to equal representation in high-paying jobs. The second chart displays the distribution of men and women across different occupation skill levels, showing that women are often underrepresented in higher-skilled, higher-paying roles like managerial positions.</p>
+            <p><strong>Analysis:</strong> Despite more women achieving higher education, they are still underrepresented in well-paying managerial and technical roles. This suggests that obstacles beyond education like societal expectations and challenges with work-life balance are preventing women from advancing into higher-paying positions. Tackling these barriers could lead to more equitable outcomes in the workforce.</p>
+            <div id="vis4"></div>
+            <p class="annotation">Annotation: Hovering over the chart will provide tooltip that will provide additional information.</p>
+            <p class="filters">Filters: Year, State, Gender</p>
+            <p class="limitation">Limitation: The data doesn't consider differences in work experience, career breaks (like for childcare), or cultural factors that might influence job choices and opportunities for advancement.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Data Source: Australian Bureau of Statistics (ABS)</p>
+        <p>Created by Henry Vo, Student ID: 33120188, 26/10/2024</p>
+    </footer>
+
+    <script type="text/javascript">
+        var vega1 = "choropleth_map.json";
+        vegaEmbed('#vis1', vega1).catch(console.error);
+
+        var vega2 = "line_&_area_chart.json";
+        vegaEmbed('#vis2', vega2).catch(console.error);
+
+        var vega3 = "group_bar_chart.json";
+        vegaEmbed('#vis3', vega3).catch(console.error);
+
+        var vega4 = "2stacked_bar.json";
+        vegaEmbed('#vis4', vega4).catch(console.error);
+    </script>
+</body>
+</html>

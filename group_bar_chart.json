@@ -1,0 +1,112 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Median Weekly Earnings by Industry and Sex, Australia (2014 - 2023)",
+    "width": 1200,
+    "height": 600,
+    "data": {
+      "url": "https://raw.githubusercontent.com/nothennie/test/refs/heads/main/data/weekly(states%2Bindustry%2Bt).csv"
+    },
+    "params": [
+      {
+        "name": "Selected_Year",
+        "value": 2014,
+        "bind": {
+          "input": "range",
+          "min": 2014,
+          "max": 2023,
+          "step": 1,
+          "name": "Select Year: "
+        }
+      },
+      {
+        "name": "Selected_State",
+        "value": "Total",
+        "bind": {
+          "input": "select",
+          "labels": [
+            "Total",
+            "Victoria",
+            "New South Wales",
+            "Queensland",
+            "South Australia",
+            "Western Australia",
+            "Tasmania",
+            "Australian Capital Territory"
+          ],
+          "options": [
+            "Total",
+            "Victoria",
+            "New South Wales",
+            "Queensland",
+            "South Australia",
+            "Western Australia",
+            "Tasmania",
+            "Australian Capital Territory"
+          ],
+          "name": "Select State: "
+        }
+      }
+    ],
+    "transform": [
+      {"filter": "datum.State == Selected_State"},
+      {"filter": "datum.Year == Selected_Year"}
+    ],
+    "layer": [
+      {
+        "mark": "bar",
+        "encoding": {
+          "x": {
+            "field": "Industry",
+            "type": "nominal",
+            "axis": {"title": "Industry"},
+            "sort": "y"
+          },
+          "xOffset": {"field": "Sex", "type": "nominal"},
+          "y": {
+            "field": "Median_Weekly",
+            "type": "quantitative",
+            "axis": {"title": "Median weekly earnings ($)"}
+          },
+          "color": {
+            "field": "Sex",
+            "type": "nominal",
+            "scale": {
+              "domain": ["Male", "Female"],
+              "range": ["#a4cd8d", "#f2a484"]  
+            },
+            "legend": {"title": "Sex"}
+          },
+          "tooltip": [
+            {"field": "Industry", "type": "nominal", "title": "Industry"},
+            {
+              "field": "Median_Weekly",
+              "type": "quantitative",
+              "title": "Median weekly earnings ($)"
+            },
+            {"field": "State", "type": "nominal", "title": "State"},
+            {"field": "Year", "type": "quantitative", "title": "Year"}
+          ]
+        }
+      },
+      {
+        "mark": {
+          "type": "text",
+          "align": "center",
+          "baseline": "bottom",
+          "dy": -5
+        },
+        "encoding": {
+          "x": {
+            "field": "Industry",
+            "type": "nominal",
+            "axis": {"title": "Industry"},
+            "sort": "y"
+          },
+          "xOffset": {"field": "Sex", "type": "nominal"},
+          "y": {"field": "Median_Weekly", "type": "quantitative"},
+          "text": {"field": "Median_Weekly", "type": "quantitative"},
+          "color": {"value": "black"}
+        }
+      }
+    ]
+  }

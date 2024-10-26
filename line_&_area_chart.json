@@ -1,0 +1,267 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "params": [
+      {
+        "name": "Selected_State",
+        "value": "Total",
+        "bind": {
+          "input": "select",
+          "labels": [
+            "Total",
+            "Victoria",
+            "New South Wales",
+            "Queensland",
+            "South Australia",
+            "Western Australia",
+            "Tasmania",
+            "Australian Capital Territory"
+          ],
+          "options": [
+            "Total",
+            "Victoria",
+            "New South Wales",
+            "Queensland",
+            "South Australia",
+            "Western Australia",
+            "Tasmania",
+            "Australian Capital Territory"
+          ],
+          "name": "Select State: "
+        }
+      }
+    ],
+    "hconcat": [
+      {
+        "title": "Median Weekly Earnings by Sex and Gender Pay Gap, Australia (2014-2023)",
+        "width": 300,
+        "height": 400,
+        "data": {
+          "url": "https://raw.githubusercontent.com/nothennie/test/refs/heads/main/data/weekly(state%2Bgap%2Bweekly).csv"
+        },
+        "transform": [
+          {"filter": "datum.State == Selected_State"},
+          {
+            "pivot": "Sex", 
+            "value": "Median_Weekly", 
+            "groupby": ["Year"]
+          },
+          {
+            "calculate": "round((datum.Male - datum.Female) / datum.Male * 100 * 10) / 10", 
+            "as": "Gender_Pay_Gap_Calculated"
+          }
+        ],
+        "layer": [
+          {
+            "mark": {
+              "type": "area",
+              "interpolate": "linear",
+              "line": {
+                "color": "steelblue"
+              },
+              "point": true,
+              "opacity": 0.3
+            },
+            "encoding": {
+              "y": {
+                "field": "Male",
+                "type": "quantitative",
+                "axis": {
+                  "title": "Median weekly earnings ($)"
+                }
+              },
+              "y2": {
+                "field": "Female"
+              },
+              "x": {
+                "field": "Year",
+                "type": "temporal",
+                "axis": {
+                  "title": "Year"
+                }
+              },
+              "color": {"value": "lightgray"},
+              "tooltip": [
+                {"field": "Male", "type": "quantitative", "title": "Male Earnings ($)"},
+                {"field": "Female", "type": "quantitative", "title": "Female Earnings ($)"},
+                {"field": "Gender_Pay_Gap_Calculated", "type": "quantitative", "title": "Gender Pay Gap (%)", "format": ".1f"}
+              ]
+            }
+          },
+          {
+            "mark": {
+              "type": "line",
+              "point": true
+            },
+            "encoding": {
+              "y": {
+                "field": "Male",
+                "type": "quantitative"
+              },
+              "x": {
+                "field": "Year",
+                "type": "temporal"
+              },
+              "color": {"value": "#a4cd8d"},
+              "tooltip": [
+                {"field": "Male", "type": "quantitative", "title": "Male Earnings ($)"}
+              ]
+            }
+          },
+          {
+            "mark": {
+              "type": "line",
+              "point": true
+            },
+            "encoding": {
+              "y": {
+                "field": "Female",
+                "type": "quantitative"
+              },
+              "x": {
+                "field": "Year",
+                "type": "temporal"
+              },
+              "color": {"value": "#f2a484"},
+              "tooltip": [
+                {"field": "Female", "type": "quantitative", "title": "Female Earnings ($)"}
+              ]
+            }
+          },
+          {
+            "mark": "rule",
+            "encoding": {
+              "x": {"field": "Year", "type": "temporal"},
+              "opacity": {
+                "condition": {"value": 0.3, "param": "hover", "empty": false},
+                "value": 0
+              },
+              "tooltip": [
+                {"field": "Male", "type": "quantitative", "title": "Male Earnings ($)"},
+                {"field": "Female", "type": "quantitative", "title": "Female Earnings ($)"},
+                {"field": "Gender_Pay_Gap_Calculated", "type": "quantitative", "title": "Gender Pay Gap (%)"}
+              ]
+            },
+            "params": [
+              {
+                "name": "hover",
+                "select": {
+                  "type": "point",
+                  "fields": ["Year"],
+                  "nearest": true,
+                  "on": "pointerover",
+                  "clear": "pointerout"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Cumulative Earnings over a Career by Gender, Australia",
+        "width": 300,
+        "height": 400,
+        "data": {
+          "url": "https://raw.githubusercontent.com/nothennie/test/refs/heads/main/data/cumulative_earnings.csv"
+        },
+        "transform": [
+          {"filter": "datum.State == Selected_State"},
+          {
+            "pivot": "Sex", 
+            "value": "Cumulative_Earnings", 
+            "groupby": ["Career_Year"]
+          },
+          {
+            "calculate": "datum.Male / 1000", 
+            "as": "Male_Scaled"
+          },
+          {
+            "calculate": "datum.Female / 1000", 
+            "as": "Female_Scaled"
+          },
+          {
+            "calculate": "(datum.Male - datum.Female) / 1000", 
+            "as": "Gender_Pay_Gap_Scaled"
+          }
+        ],
+        "layer": [
+          {
+            "mark": {
+              "type": "area",
+              "line": true,
+              "point": true
+            },
+            "encoding": {
+              "y": {
+                "field": "Male_Scaled",
+                "type": "quantitative",
+                "axis": {
+                  "title": "Cumulative earnings ($ thousands)"
+                }
+              },
+              "x": {
+                "field": "Career_Year",
+                "type": "quantitative",
+                "axis": {
+                  "title": "Career Year",
+                  "format": ".2s" 
+                }
+              },
+              "color": {"value": "#a4cd8d"}
+            }
+          },
+          {
+            "mark": {
+              "type": "area",
+              "line": true,
+              "point": true
+            },
+            "encoding": {
+              "y": {
+                "field": "Female_Scaled",
+                "type": "quantitative",
+                "axis": {
+                  "title": "Cumulative earnings ($ thousands)"
+                }
+              },
+              "x": {
+                "field": "Career_Year",
+                "type": "quantitative",
+                "axis": {
+                  "title": "Career Year",
+                  "format": ".2s"  
+                }
+              },
+              "color": {"value": "#f2a484"}
+            }
+          },
+          {
+            "mark": "rule",
+            "encoding": {
+              "x": {"field": "Career_Year", "type": "quantitative", "axis": {"format": ".2s"}},
+              "opacity": {
+                "condition": {"value": 0.3, "param": "hover", "empty": false},
+                "value": 0
+              },
+              "tooltip": [
+                {"field": "Male_Scaled", "type": "quantitative", "title": "Cumulative Male Earnings ($'000)", "format": ",.3f"},
+                {"field": "Female_Scaled", "type": "quantitative", "title": "Cumulative Female Earnings ($'000)", "format": ",.3f"},
+                {"field": "Gender_Pay_Gap_Scaled", "type": "quantitative", "title": "Gender Pay Gap ($'000)", "format": ",.3f"}
+              ]
+            },
+            "params": [
+              {
+                "name": "hover",
+                "select": {
+                  "type": "point",
+                  "fields": ["Career_Year"],
+                  "nearest": true,
+                  "on": "pointerover",
+                  "clear": "pointerout"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
